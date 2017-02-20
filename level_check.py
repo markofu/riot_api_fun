@@ -1,4 +1,20 @@
+#!/usr/bin/env python
+
+"""level_check
+
+Usage:
+    level_check.py
+
+    level_check.py is a small bit of python code intended for fun to retrieve some information relating to LoL performance for friends :)
+    Options:
+      -h --help                   Show this screen
+      -v --version                Show the version\n\n
+"""
+
 __author__ = 'mhillick'
+
+#TODO :: Like shitloads tbh
+
 import urllib
 import json
 from slackclient import SlackClient
@@ -6,9 +22,9 @@ import datetime
 
 #day = datetime.date.today.strftime("%Y-%m-%d")
 # Riot API Stuff
-api_key = "xxxx"
+#api_key = ""
 # Slack Stuff
-slack_token = "xxxx"
+#slack_token = "" # The Slack Bot token for API calls
 sc = SlackClient(slack_token) # Create the slack bot instance with the token we created earlier:
 
 
@@ -65,45 +81,57 @@ def send_message(sc,channel_id,text):
 def update_l30(message):
     """Updates the Level 30 Channel with messages"""
     try:
-        send_message(sc,"l30-progress",message)
-        #send_message(sc,"ot-mh-testing",message)
+        #send_message(sc,"l30-progress",message)
+        send_message(sc,"ot-mh-testing",message)
     except:
         print("Unable to connect to Slack!")
     return None
 
-message = ':boom: Hey Summoners, here is the *Level 30* :newspaper: for today!!! :boom:'
-update_l30(message)
+if __name__ == '__main__':
+    from docopt import docopt
 
-# Setting up the list of tuple of summoners and summoner ids
-summoners = [('SECURITATEM', '68520962'), ('II uspdan II', '77402230') , ('siosafoo', '64399216') , ('Stelks', '79761554')]
-summoner_data = []
-for (summoner, summoner_id) in summoners:
-    try:
-        level = get_level(summoner)
-        message = "Yo *{}*, you are at level {} :summonerscup:".format(summoner,level)
-        update_l30(message)
+    arguments = docopt(__doc__, version='level_check 0.2')
+
+    # Setting up the list of tuple of summoners and summoner ids
+    summoners = [('SECURITATEM', '68520962'), ('II uspdan II', '77402230') , ('siosafoo', '64399216') , ('Stelks', '79761554')]
+    summoner_data = []
+
+    message = ':boom: Hey Summoners, here is the *Level 30* :newspaper: for this morning!!! :boom:'
+    update_l30(message)
+
+    for (summoner, summoner_id) in summoners:
         try:
-            (champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills) = get_game(summoner_id)
-            lastplay_date = datetime.datetime.fromtimestamp(timestamp/1000)
-            lastplay_day = datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
-            champ_name = get_champ_name(champ_id)
-            if game_mode == "CLASSIC":
-                game_mode = "SUMMONER'S RIFT"
-            if winner == True:
-                winner = 'winner'
-            else:
-                winner = 'big f**king loser'
-            message = "```In your last game with {}, on {}, you played {} and were a {}. You had {} kills, {} deaths and {} assists! You dealt {} total damage and took {} total damage.```".format(champ_name, lastplay_day, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken)
-            if damage_dealt < damage_taken:
-                message += "\n\n> Jesus dude, you got creamed :rekt: :lololol"
-            if damage_dealt > (1.5 * damage_taken):
-                message += "\n\n> *ggwp* dude, you :rekt: :ggez:"
-            if pentakills > 0:
-                message += "\n\nHOLY SHIT, you got a `pentakill` :fistbump:"
-            if lastplay_date < datetime.datetime.now()-datetime.timedelta(days=4):
-                message += "\n\nSadness *{}*, you haven't played in ages! Come on, get back on the Rift!!! :sadbrewer:".format(summoner)
+            level = get_level(summoner)
+            message = "Yo *{}*, you are at level {}".format(summoner,level)
+            if level == 30:
+                message += "Jeez, this is fucking incredible, :ggez: {}, you have won the :summonerscup:. Onwards and upwards to the toxic world of Ranked for you :thumbsup:".format(summoner)
             update_l30(message)
+            try:
+                (champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills) = get_game(summoner_id)
+                lastplay_date = datetime.datetime.fromtimestamp(timestamp/1000)
+                lastplay_day = datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
+                champ_name = get_champ_name(champ_id)
+                if game_mode == "CLASSIC":
+                    game_mode = "SUMMONER'S RIFT"
+                if winner == True:
+                    winner = 'winner'
+                else:
+                    winner = 'big f**king loser'
+                message = "```In your last game with {}, on {}, you played {} and were a {}. You had {} kills, {} deaths and {} assists! You dealt {} total damage and took {} total damage.```".format(champ_name, lastplay_day, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken)
+                if game_mode == "ARAM":
+                    message += "\n\n> WTF, srsly dude, ARAM??? You filthy casual :shit:"
+                if damage_dealt < damage_taken:
+                    message += "\n\n> Jesus dude, you got creamed :rekt: :lololol"
+                if damage_dealt > (1.5 * damage_taken):
+                    message += "\n\n> *ggwp* dude, you :rekt: :ggez:"
+                if pentakills > 0:
+                    message += "\n\nHOLY SHIT, you got a `pentakill` :fistbump:"
+                if lastplay_date < datetime.datetime.now()-datetime.timedelta(days=4):
+                    message += "\n\n*Sadness *{}*, you haven't played in ages! Come on, get back on the Rift!!! :sadbrewer:".format(summoner)
+                update_l30(message)
+            except Exception as e:
+                print "Unknown Game Status"
         except Exception as e:
-            print "Unknown Game Status"
-    except Exception as e:
-        print e
+            print e
+            raise e
+    
