@@ -22,9 +22,9 @@ import datetime
 
 #day = datetime.date.today.strftime("%Y-%m-%d")
 # Riot API Stuff
-#api_key = ""
+api_key = "xxxx"
 # Slack Stuff
-#slack_token = "" # The Slack Bot token for API calls
+slack_token = "xxxx" # The Slack Bot token for API calls
 sc = SlackClient(slack_token) # Create the slack bot instance with the token we created earlier:
 
 
