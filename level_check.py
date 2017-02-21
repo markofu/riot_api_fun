@@ -19,9 +19,7 @@ import urllib
 import json
 from slackclient import SlackClient
 import datetime
-import time
 
-#day = datetime.date.today.strftime("%Y-%m-%d")
 # Riot API Stuff
 api_key = "xxxx"
 # Slack Stuff
@@ -115,7 +113,6 @@ if __name__ == '__main__':
                 message += "\n\n> Awesome work {}!!! Onwards and upwards to the toxic world of Ranked for you :thumbsup:".format(summoner)
             update_l30(message)
             try:
-                time.sleep(0.500) # Short sleep between API calls
                 (highest_rank, champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills) = get_game(summoner_id)
                 lastplay_date = datetime.datetime.fromtimestamp(timestamp/1000)
                 lastplay_day = datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
