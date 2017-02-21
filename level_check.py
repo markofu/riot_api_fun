@@ -19,6 +19,7 @@ import urllib
 import json
 from slackclient import SlackClient
 import datetime
+import time
 
 #day = datetime.date.today.strftime("%Y-%m-%d")
 # Riot API Stuff
@@ -47,15 +48,22 @@ def get_game(summoner_id):
     info = json.loads(input)
     timestamp = info[0]["gameInfo"]["gameStartTimestamp"]
     game_mode = info[0]["gameInfo"]["gameMode"]
-    champ_id = info[0]["participants"][0]["championId"]
-    winner = info[0]["participants"][0]["stats"]["winner"]
-    kills = info[0]["participants"][0]["stats"]["kills"]
-    deaths = info[0]["participants"][0]["stats"]["deaths"]
-    assists = info[0]["participants"][0]["stats"]["assists"]
-    damage_dealt = info[0]["participants"][0]["stats"]["totalDamageDealt"]
-    damage_taken = info[0]["participants"][0]["stats"]["totalDamageTaken"]
-    pentakills = info[0]["participants"][0]["stats"]["pentaKills"]
-    return champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills
+    summoner_ids = ['68520962', '77402230', '64399216', '79761554']
+    if game_mode == "CLASSIC" or "ARAM":
+        for i in range(0,10):
+            s = info[0]["participants"][i]["summonerId"]
+            if str(s) not in summoner_ids:continue
+            if str(s) == str(summoner_id): # Ensuring summoner ids are equal as people often play in the same game
+                champ_id = info[0]["participants"][i]["championId"]
+                highest_rank = info[0]["participants"][i]['highestAchievedSeasonTier']
+                winner = info[0]["participants"][i]["stats"]["winner"]
+                kills = info[0]["participants"][i]["stats"]["kills"]
+                deaths = info[0]["participants"][i]["stats"]["deaths"]
+                assists = info[0]["participants"][i]["stats"]["assists"]
+                damage_dealt = info[0]["participants"][i]["stats"]["totalDamageDealt"]
+                damage_taken = info[0]["participants"][i]["stats"]["totalDamageTaken"]
+                pentakills = info[0]["participants"][i]["stats"]["pentaKills"]
+    return highest_rank, champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills
 
 def get_champ_name(champ_id):
     """Gets the Champion Name from the Champion ID"""
@@ -81,8 +89,8 @@ def send_message(sc,channel_id,text):
 def update_l30(message):
     """Updates the Level 30 Channel with messages"""
     try:
-        #send_message(sc,"l30-progress",message)
-        send_message(sc,"ot-mh-testing",message)
+        send_message(sc,"l30-progress",message)
+        #send_message(sc,"ot-mh-testing",message)
     except:
         print("Unable to connect to Slack!")
     return None
@@ -96,42 +104,44 @@ if __name__ == '__main__':
     summoners = [('SECURITATEM', '68520962'), ('II uspdan II', '77402230') , ('siosafoo', '64399216') , ('Stelks', '79761554')]
     summoner_data = []
 
-    message = ':boom: Hey Summoners, here is the *Level 30* :newspaper: for this morning!!! :boom:'
+    message = ':boom: Hey Summoners, here is the *Level 30* :newspaper: for this evening!!! :boom:'
     update_l30(message)
 
     for (summoner, summoner_id) in summoners:
         try:
             level = get_level(summoner)
             message = "Yo *{}*, you are at level {}".format(summoner,level)
-            if level == 30:
-                message += "Jeez, this is fucking incredible, :ggez: {}, you have won the :summonerscup:. Onwards and upwards to the toxic world of Ranked for you :thumbsup:".format(summoner)
+            if level == 30 and not 'II uspdan II':
+                message += "\n\n> Awesome work {}!!! Onwards and upwards to the toxic world of Ranked for you :thumbsup:".format(summoner)
             update_l30(message)
             try:
-                (champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills) = get_game(summoner_id)
+                time.sleep(0.500) # Short sleep between API calls
+                (highest_rank, champ_id, timestamp, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, pentakills) = get_game(summoner_id)
                 lastplay_date = datetime.datetime.fromtimestamp(timestamp/1000)
                 lastplay_day = datetime.datetime.fromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
                 champ_name = get_champ_name(champ_id)
+                if champ_name == "Garen":
+                    champ_name = "Garen, the biggest spinner and most boring champion in the game"
                 if game_mode == "CLASSIC":
                     game_mode = "SUMMONER'S RIFT"
                 if winner == True:
-                    winner = 'winner'
+                    winner = "winner"
                 else:
-                    winner = 'big f**king loser'
-                message = "```In your last game with {}, on {}, you played {} and were a {}. You had {} kills, {} deaths and {} assists! You dealt {} total damage and took {} total damage.```".format(champ_name, lastplay_day, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken)
+                    winner = "big f**king loser"
+                message = "```In your last game with {}, on {}, you played {} and were a {}. You had {} kills, {} deaths and {} assists! You dealt {} total damage and took {} total damage. Your current rank is {} btw!```".format(champ_name, lastplay_day, game_mode, winner, kills, deaths, assists, damage_dealt, damage_taken, highest_rank)
                 if game_mode == "ARAM":
                     message += "\n\n> WTF, srsly dude, ARAM??? You filthy casual :shit:"
                 if damage_dealt < damage_taken:
                     message += "\n\n> Jesus dude, you got creamed :rekt: :lololol"
                 if damage_dealt > (1.5 * damage_taken):
-                    message += "\n\n> *ggwp* dude, you :rekt: :ggez:"
+                    message += "\n>>> *ggwp* in that last game dude :ggez:"
                 if pentakills > 0:
-                    message += "\n\nHOLY SHIT, you got a `pentakill` :fistbump:"
+                    message += "\n> HOLY SHIT, you got a `pentakill` :fistbump:"
                 if lastplay_date < datetime.datetime.now()-datetime.timedelta(days=4):
-                    message += "\n\n*Sadness *{}*, you haven't played in ages! Come on, get back on the Rift!!! :sadbrewer:".format(summoner)
+                    message += "\n> Yo *{}*, you haven't played in ages! Come on, get back on the Rift!!! :sadbrewer:".format(summoner)
                 update_l30(message)
             except Exception as e:
                 print "Unknown Game Status"
+                print e
         except Exception as e:
             print e
-            raise e
-    

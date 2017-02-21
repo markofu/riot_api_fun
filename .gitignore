@@ -27,8 +27,9 @@ var/
 # Log Files
 *.log
 
-# Old Version Files
+# Version Files
 *.old
+*.new
 
 # Key Files
 *.key
