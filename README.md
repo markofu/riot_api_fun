@@ -11,11 +11,11 @@ This tool runs and pulls down metadata from the Riot API regarding Riot InfoSec 
   - Slackclient
   - Docopt
 - **Required Accounts**
-  - League of Legends
-  - Slack Accounts 
+  - [League of Legends](https://www.leagueoflegends.com)
+  - [Slack](https://www.slack.com)
 - **Auth Requirements**
   - [Riot API Key](https://developer.riotgames.com/docs/api-keys)
-  - [Slack Web Token](https://api.slack.com/web) and click on `Generate Test Tokens`)
+  - [Slack Web Token](https://api.slack.com/web) and click on `Generate Test Tokens` towards the bottom of the page.
 - **Usage**
   - Run ```python level_check.py```
   - Fully documented in the tool as per ```python level_check.py -h```
