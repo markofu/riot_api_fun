@@ -14,8 +14,8 @@ This tool runs and pulls down metadata from the Riot API regarding Riot InfoSec 
   - League of Legends
   - Slack Accounts 
 - **Auth Requirements**
-  - ![Riot API Key](https://developer.riotgames.com/docs/api-keys)
-  - ![Slack Web Token](https://api.slack.com/web) and click on `Generate Test Tokens`)
+  - [Riot API Key](https://developer.riotgames.com/docs/api-keys)
+  - [Slack Web Token](https://api.slack.com/web) and click on `Generate Test Tokens`)
 - **Usage**
   - Run ```python level_check.py```
   - Fully documented in the tool as per ```python level_check.py -h```
