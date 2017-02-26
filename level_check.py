@@ -27,8 +27,6 @@ import urllib
 import json
 from slackclient import SlackClient
 import datetime
-api_key="" # taken from cli input
-slack_token="" # taken from cli input
 
 def get_level(summoner):
     """Gets the level of a given summoner"""
@@ -91,7 +89,8 @@ def update_l30(message):
     try:
         #send_message(sc,"l30-progress",message)
         send_message(sc,"ot-mh-testing",message)
-    except:
+    except Exception as e:
+        print e
         print("Unable to connect to Slack!")
     return None
 
@@ -101,9 +100,9 @@ if __name__ == '__main__':
     try:
     # Parse arguments, use file docstring as a parameter definition
         arguments = docopt(__doc__, version='level_check 0.2')
-        sc = SlackClient(slack_token) # Create the slack bot instance with the token we created earlier:
         api_key = str(arguments['--apikey'])
         slack_token = str(arguments['--stoken'])
+        sc = SlackClient(slack_token) # Create the slack bot instance with the token we created earlier:
 
     # Handle invalid options with an exception
     except Exception as e:
@@ -162,5 +161,5 @@ if __name__ == '__main__':
         except Exception as e:
             print e
 
-message ="\n`The Level30 bot *thought* that Chris Hymes was Level 30, what's going on here???`"
+message ="\n```The Level30 bot thought that Chris Hymes was now at Level 30, what's going on here??? Are you lying Chris???????```"
 update_l30(message)
