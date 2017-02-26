@@ -161,6 +161,3 @@ if __name__ == '__main__':
                 print e
         except Exception as e:
             print e
-
-message ="```The Level30 bot thought that Chris Hymes was now at Level 30, what's going on here??? Are you lying Chris???????```"
-update_l30(message)
