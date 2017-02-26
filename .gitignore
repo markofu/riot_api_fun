@@ -33,3 +33,6 @@ var/
 
 # Key Files
 *.key
+
+# Swp Files
+*.swp
