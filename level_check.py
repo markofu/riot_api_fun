@@ -4,6 +4,7 @@
 
 Usage:
     level_check.py [-hv] --apikey=api_key --stoken=slack_token
+    level_check.py [-hv] --apikey=GAPI-2332232-xxx-xxx-xxx --stoken=xoxp-323232-3232-322334-xxxxxxxxx
     level_check.py --version
 
     level_check.py is a small bit of python code intended for fun to retrieve some information relating to LoL performance for friends :)
@@ -87,8 +88,8 @@ def send_message(sc,channel_id,text):
 def update_l30(message):
     """Updates the Level 30 Channel with messages"""
     try:
-        #send_message(sc,"l30-progress",message)
-        send_message(sc,"ot-mh-testing",message)
+        send_message(sc,"l30-progress",message)
+        #send_message(sc,"ot-mh-testing",message)
     except Exception as e:
         print e
         print("Unable to connect to Slack!")
@@ -161,5 +162,5 @@ if __name__ == '__main__':
         except Exception as e:
             print e
 
-message ="\n```The Level30 bot thought that Chris Hymes was now at Level 30, what's going on here??? Are you lying Chris???????```"
+message ="```The Level30 bot thought that Chris Hymes was now at Level 30, what's going on here??? Are you lying Chris???????```"
 update_l30(message)
