@@ -97,6 +97,12 @@ def send_level(summoner_id, level):
         real_name = "Diamond Dallas Page"
     elif summoner_id == "27721089":
         real_name = "Kim Jong's Nephew"
+    elif summoner_id == "82841216":
+        real_name = "Laf0rge"
+    elif summoner_id == "81102223":
+        real_name = "ninjaBoricua"
+    elif summoner_id == "78673081":
+        real_name = "Teglon"
     message = "Yo *{}*, you are at level *{}*!!!".format(real_name, level)
     update_l30(message)
     return real_name
@@ -146,7 +152,7 @@ def get_champ_name(champ_id):
     elif champ_name == "Tahm Kench":
         champ_name = "feelsbad_tahmkench" # bizarrely the Tahm emoji ain't the standard
     elif champ_name == "Teemo":
-        champ_name = "devil_teemo3" # bizarrely the Tahm emoji ain't the standard
+        champ_name = "devil_teemo3" # bizarrely the Teemo emoji ain't the standard
     return champ_name
 
 def send_winner(game_mode, winner,kda, damage_dealt,damage_taken):
@@ -246,7 +252,7 @@ if __name__ == '__main__':
         print e
 
     # Setting up the list of summoner ids
-    summoner_ids = ['68520962', '77402230', '64399216', '79761554', '78639170', '56779115', '27721089']
+    summoner_ids = ['68520962', '77402230', '64399216', '79761554', '78639170', '56779115', '27721089', '82841216', '81102223', '78673081']
     greeting()
     for id in summoner_ids:
         try:
