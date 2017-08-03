@@ -2,7 +2,7 @@
 
 ## Description
 
-This tool runs and pulls down metadata from the Riot API regarding Riot InfoSec folk before posting that information in friendly format to Slack.
+I wrote this tool for fun to pull down metadata from the Riot API regarding some of my InfoSec colleagues to troll them about their experiences playing [LoL](https://www.leagueoflegends.com) before posting that information in a *very friendly* format to a [Slack](https://www.slack.com) channel.
 
 ## SetUp & Requirements
 
@@ -22,5 +22,5 @@ This tool runs and pulls down metadata from the Riot API regarding Riot InfoSec 
 
 ## Fun
 
-- This is only some fun, it's not about tracking, okie dokie!
-
+- This is only some fun, purely trolling on pure performance in LoL ;-)
+- Statistical analysis on performance is purely illogical and designed to tilt!
