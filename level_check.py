@@ -22,8 +22,6 @@ Usage:
 
 __author__ = 'mhillick'
 
-#TODO :: Like shitloads tbh
-
 import urllib
 import json
 from slackclient import SlackClient
