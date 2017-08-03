@@ -2,6 +2,6 @@
 
 ## List
 
-- Port the code to AWS Lambda in the InfoSec CTF account
-- Add the Tokens to AWS KMS in the InfoSec CTF account
+- Port the code to AWS Lambda
+- Add the Tokens to AWS KMS
 - Schedule through AWS Lambda
